@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Raphael test</title>
+	<script src="raphael-min.js"></script>
+	<script>
+		function line(x1, y1, x2, y2){
+			return "M"+x1+" "+y1+"L"+x2+" "+y2+" "
+		}
+		window.onload = function() {
+			var width = 320;
+			var height = 320;
+			var margin_left = 10;
+			var margin_right = 10;
+			var margin_bottom = 20;
+			var margin_top = 10;
+			var months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
+			var xaxis_y = height-margin_bottom;
+
+			xaxis_offset = width/24;
+			xaxis_spacing = (width - margin_left - margin_right - xaxis_offset - xaxis_offset)/11;
+
+
+			var paper = Raphael(0, 0, width, height);var c2 = paper.path(line(margin_left,xaxis_y,width-10,xaxis_y)+line(margin_left, margin_top, margin_left, xaxis_y));
+
+			for (var i = 0; i < 12; i++) {
+				x = margin_left+xaxis_offset+(xaxis_spacing*i);
+				paper.text(x, xaxis_y+10, months[i]);
+				paper.path(line(x, xaxis_y, x, xaxis_y+4));
+			};
+		};
+	</script>
+</head>
+<body>
+	
+</body>
+</html>
