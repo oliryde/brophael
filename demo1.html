@@ -5,30 +5,58 @@
 	<title>Raphael test</title>
 	<script src="raphael-min.js"></script>
 	<script>
+		function getMaxOfArray(numArray) {
+			return Math.max.apply(null, numArray);
+		}
 		function line(x1, y1, x2, y2){
 			return "M"+x1+" "+y1+"L"+x2+" "+y2+" "
 		}
 		window.onload = function() {
-			var width = 320;
-			var height = 320;
-			var margin_left = 10;
+			var width = 1600;
+			var height = 1200;
+			var margin_left = 60;
 			var margin_right = 10;
 			var margin_bottom = 20;
 			var margin_top = 10;
 			var months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
+
 			var xaxis_y = height-margin_bottom;
+			var yaxis_x = margin_left;
 
-			xaxis_offset = width/24;
-			xaxis_spacing = (width - margin_left - margin_right - xaxis_offset - xaxis_offset)/11;
+			var data = [Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8)]
 
+			var xaxis_offset = width / 24;
+			var xaxis_length = width - margin_left - margin_right - xaxis_offset - xaxis_offset
+			var bar_width = xaxis_length/11 - (xaxis_length / 30)
+			var xaxis_spacing = xaxis_length/11;
+			var max = getMaxOfArray(data);
+			var number = max;
+			var i = 0;
+			while(number > 100) {
+				number = number / 10;
+				i++;
+			}
+			max = (Math.floor(number)+1)*Math.pow(10, i)
+			// console.log(i, "number", getMaxOfArray(data), "max")
+			// console.log(max*0.0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max)
 
-			var paper = Raphael(0, 0, width, height);var c2 = paper.path(line(margin_left,xaxis_y,width-10,xaxis_y)+line(margin_left, margin_top, margin_left, xaxis_y));
-
+			var paper = Raphael(0, 0, width, height);
 			for (var i = 0; i < 12; i++) {
-				x = margin_left+xaxis_offset+(xaxis_spacing*i);
-				paper.text(x, xaxis_y+10, months[i]);
-				paper.path(line(x, xaxis_y, x, xaxis_y+4));
+				if(i == 0) {
+					paper.path(line(margin_left,height - margin_bottom,margin_left-5,height - margin_bottom));
+					paper.text(yaxis_x - 30, xaxis_y, "0 kWh");
+				}
+			}
+			for (var i = 0; i < 12; i++) {
+				bar1_height = data[i];
+				x = margin_left + xaxis_offset + (xaxis_spacing * i);
+				var rekt = paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height)
+				rekt.attr("fill", "0-#5ab85a:0-#008b00:100");
+				rekt.attr("stroke-width", "0");
+				paper.text(x, xaxis_y + 10, months[i]);
+				paper.path(line(x, xaxis_y, x, xaxis_y + 4));
 			};
+			var c2 = paper.path(line(margin_left,xaxis_y,width - 10,xaxis_y) + line(margin_left, margin_top, margin_left, xaxis_y));
 		};
 	</script>
 </head>
