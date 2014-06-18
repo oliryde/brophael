@@ -37,15 +37,22 @@
 				i++;
 			}
 			max = (Math.floor(number)+1)*Math.pow(10, i)
-			// console.log(i, "number", getMaxOfArray(data), "max")
-			// console.log(max*0.0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max)
+			// console.log(i, "number", getMaxOfArray(data), "max");
+			// console.log(max*0.0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max);
+			yaxis_text = [0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max];
 
 			var paper = Raphael(0, 0, width, height);
-			for (var i = 0; i < 12; i++) {
-				if(i == 0) {
-					paper.path(line(margin_left,height - margin_bottom,margin_left-5,height - margin_bottom));
-					paper.text(yaxis_x - 30, xaxis_y, "0 kWh");
-				}
+			paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom);
+			for (var i = 0; i < 10; i++) {
+				// if(i == 0) {
+				// 	paper.path(line(margin_left,height - margin_bottom,margin_left-5,height - margin_bottom));
+				// 	test = paper.text(yaxis_x - 10, xaxis_y, "0 kWh").attr('text-anchor', 'end');
+				// }
+				y = height - margin_bottom - i * (0.1*(height - margin_top - margin_bottom))
+				paper.path(line(margin_left,y,margin_left-5,y));
+				paper.path(line(margin_left,y,width- margin_right,y));
+				test = paper.text(yaxis_x - 10, y, yaxis_text[i] + " kWh").attr('text-anchor', 'end');
+				
 			}
 			for (var i = 0; i < 12; i++) {
 				bar1_height = data[i];
@@ -56,7 +63,8 @@
 				paper.text(x, xaxis_y + 10, months[i]);
 				paper.path(line(x, xaxis_y, x, xaxis_y + 4));
 			};
-			var c2 = paper.path(line(margin_left,xaxis_y,width - 10,xaxis_y) + line(margin_left, margin_top, margin_left, xaxis_y));
+			paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom);
+			// var c2 = paper.path(line(margin_left,xaxis_y,width - 10,xaxis_y) + line(margin_left, margin_top, margin_left, xaxis_y));
 		};
 	</script>
 </head>
