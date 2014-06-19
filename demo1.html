@@ -6,7 +6,11 @@
 	<script src="raphael-min.js"></script>
 	<script>
 		function getMaxOfArray(numArray) {
-			return Math.max.apply(null, numArray);
+			var arraytest = [];
+			for (var i = numArray.length - 1; i >= 0; i--) {
+				arraytest.push(numArray[i].lower + numArray[i].higher);
+			};
+			return Math.max.apply(null, arraytest);
 		}
 		function line(x1, y1, x2, y2){
 			return "M"+x1+" "+y1+"L"+x2+" "+y2+" ";
@@ -28,16 +32,18 @@
 
 			var xaxis_y = height-margin_bottom;
 			var yaxis_x = margin_left;
+			var data = [];
 
-			var data = [Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8)];
-			var data2 = [Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8)];
-
+			for(i = 0; i < 12; i++) {
+				data.push({lower: Math.random()*height, higher: Math.random()*height})
+			}
+			console.log(data.length)
 			var xaxis_offset = width / 24;
 			var xaxis_length = width - margin_left - margin_right - xaxis_offset - xaxis_offset;
 			var yaxis_length = height - margin_top - margin_bottom;
 			var bar_width = xaxis_length/11 - (xaxis_length / 30);
 			var xaxis_spacing = xaxis_length/11;
-			var max = (getMaxOfArray(data)+getMaxOfArray(data2));
+			var max = (getMaxOfArray(data))*1.05;
 			var number = max;
 			var i = 0;
 			while(number > 100) {
@@ -63,8 +69,8 @@
 				
 			}
 			for (var i = 0; i < 12; i++) {
-				bar1_height = yaxis_length * (data[i]/max);
-				bar2_height = yaxis_length * (data2[i]/max);
+				bar1_height = yaxis_length * (data[i].lower/max);
+				bar2_height = yaxis_length * (data[i].higher/max);
 				x = margin_left + xaxis_offset + (xaxis_spacing * i);
 				paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height).attr({
 					"fill": "0-#f0f071:0-#8b8b00:100",
