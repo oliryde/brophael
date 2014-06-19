@@ -2,34 +2,42 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Raphael test</title>
+	<title>Bar chart</title>
 	<script src="raphael-min.js"></script>
 	<script>
 		function getMaxOfArray(numArray) {
 			return Math.max.apply(null, numArray);
 		}
 		function line(x1, y1, x2, y2){
-			return "M"+x1+" "+y1+"L"+x2+" "+y2+" "
+			return "M"+x1+" "+y1+"L"+x2+" "+y2+" ";
 		}
+
+		var size = {
+			width: window.innerWidth || document.body.clientWidth,
+			height: window.innerHeight || document.body.clientHeight
+		}
+
 		window.onload = function() {
-			var width = 1600;
-			var height = 1200;
+			var width = size.width-10;
+			var height = size.height-10;
 			var margin_left = 60;
 			var margin_right = 10;
 			var margin_bottom = 20;
 			var margin_top = 10;
-			var months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"]
+			var months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
 
 			var xaxis_y = height-margin_bottom;
 			var yaxis_x = margin_left;
 
-			var data = [Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8)]
+			var data = [Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8)];
+			var data2 = [Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8),Math.random()*(height*0.8)];
 
 			var xaxis_offset = width / 24;
-			var xaxis_length = width - margin_left - margin_right - xaxis_offset - xaxis_offset
-			var bar_width = xaxis_length/11 - (xaxis_length / 30)
+			var xaxis_length = width - margin_left - margin_right - xaxis_offset - xaxis_offset;
+			var yaxis_length = height - margin_top - margin_bottom;
+			var bar_width = xaxis_length/11 - (xaxis_length / 30);
 			var xaxis_spacing = xaxis_length/11;
-			var max = getMaxOfArray(data);
+			var max = (getMaxOfArray(data)+getMaxOfArray(data2));
 			var number = max;
 			var i = 0;
 			while(number > 100) {
@@ -42,24 +50,30 @@
 			yaxis_text = [0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max];
 
 			var paper = Raphael(0, 0, width, height);
-			paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom);
+			paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom).attr("fill", "#FFFFFF");
 			for (var i = 0; i < 10; i++) {
 				// if(i == 0) {
 				// 	paper.path(line(margin_left,height - margin_bottom,margin_left-5,height - margin_bottom));
 				// 	test = paper.text(yaxis_x - 10, xaxis_y, "0 kWh").attr('text-anchor', 'end');
 				// }
-				y = height - margin_bottom - i * (0.1*(height - margin_top - margin_bottom))
+				y = height - margin_bottom - i * (0.11111111111 *(height - margin_top - margin_bottom));
 				paper.path(line(margin_left,y,margin_left-5,y));
 				paper.path(line(margin_left,y,width- margin_right,y));
-				test = paper.text(yaxis_x - 10, y, yaxis_text[i] + " kWh").attr('text-anchor', 'end');
+				test = paper.text(yaxis_x - 10, y, Math.round(yaxis_text[i]) + " kWh").attr('text-anchor', 'end');
 				
 			}
 			for (var i = 0; i < 12; i++) {
-				bar1_height = data[i];
+				bar1_height = yaxis_length * (data[i]/max);
+				bar2_height = yaxis_length * (data2[i]/max);
 				x = margin_left + xaxis_offset + (xaxis_spacing * i);
-				var rekt = paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height)
-				rekt.attr("fill", "0-#5ab85a:0-#008b00:100");
-				rekt.attr("stroke-width", "0");
+				paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height).attr({
+					"fill": "0-#f0f071:0-#8b8b00:100",
+					"stroke-width": "0"});
+				paper.rect(x-bar_width / 2, xaxis_y - bar1_height - bar2_height, bar_width, bar2_height).attr({
+					"fill": "0-#5ab85a:0-#008b00:100",
+					"stroke-width": "0"});
+				// rekt.attr("fill", "0-#5ab85a:0-#008b00:100");
+				// rekt.attr("stroke-width", "0");
 				paper.text(x, xaxis_y + 10, months[i]);
 				paper.path(line(x, xaxis_y, x, xaxis_y + 4));
 			};
