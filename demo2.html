@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bar chart</title>
+	<script src="raphael-min.js"></script>
+	<script>
+		function getMaxOfArray(numArray) {
+			var temp = [];
+			for (var i = numArray.length - 1; i >= 0; i--) {
+				temp.push(numArray[i].lower + numArray[i].higher);
+				temp.push(numArray[i].budget);
+			};
+			return Math.max.apply(null, temp);
+		}
+		function line(x1, y1, x2, y2){
+			return "M"+x1+" "+y1+"L"+x2+" "+y2+" ";
+		}
+		function shape(array, complete) {
+			var complete = complete || false;
+			var test = "";
+			test += "M" + array[0].x + " " + array[0].y + " ";
+			for (var i = 1; i < array.length; i++) {
+				test += "L" + array[i].x + " " + array[i].y + " ";
+			};
+			if (complete) {
+				test += "Z";
+			};
+			return test;
+		}
+
+		// var size = {
+		// 	width: window.innerWidth || document.body.clientWidth,
+		// 	height: window.innerHeight || document.body.clientHeight
+		// }
+
+		window.onload = function() {
+			var width = 1280;
+			var height = 720;
+			// var height = size.height;
+			// var width = size.width;
+			var margin_left = 60;
+			var margin_right = 15;
+			var margin_bottom = 20;
+			var margin_top = 15;
+			var months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+			var xaxis_y = height-margin_bottom;
+			var yaxis_x = margin_left;
+			var data = [];
+
+			for(i = 0; i < 12; i++) {
+				data.push({lower: Math.random()*height, higher: Math.random()*height, budget: Math.random()*height})
+			}
+			var xaxis_length = width - margin_left - margin_right;
+			var yaxis_length = height - margin_top - margin_bottom;
+			var bar_width = xaxis_length / 11 - (xaxis_length / 30);
+			var xaxis_spacing = xaxis_length / 11;
+			var max = (getMaxOfArray(data));
+			var tallest_bar = max;
+			var number = max;
+			var i = 0;
+			while(number > 100) {
+				number = number / 10;
+				i++;
+			};
+			if(((Math.floor(number)+1)*Math.pow(10, i)) - max < max*0.01) {
+				number += 1;
+			}
+			max = (Math.floor(number)+1)*Math.pow(10, i);
+			yaxis_text = [0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max];
+
+			var paper = Raphael(0, 0, width, height);
+			paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom).attr("fill", "#FFFFFF");
+			for (var i = 0; i < 11; i++) {
+				y = height - margin_bottom - i * (0.1 *(height - margin_top - margin_bottom));
+				paper.path(line(margin_left,y,margin_left-5,y));
+				paper.path(line(margin_left,y,width- margin_right,y));
+				test = paper.text(yaxis_x - 10, y, Math.round(yaxis_text[i]) + " kWh").attr('text-anchor', 'end');
+
+			}
+
+			line_lower = [];
+			line_higher = [];
+			line_budget = [];
+			for (var i = 0; i < 12; i++) {
+				point = {};
+				point2 = {};
+				point3 = {};
+				point_height = yaxis_length * (data[i].lower/max);
+				point2_height = yaxis_length * (data[i].higher/max);
+				point3_height = yaxis_length * (data[i].budget/max);
+
+				x = margin_left + (xaxis_spacing * i);
+
+				point.x = x;
+				point.y = xaxis_y - point_height;
+
+				point2.x = x;
+				point2.y = xaxis_y - point_height - point2_height;
+
+				point3.x = x;
+				point3.y = xaxis_y - point3_height;
+
+				line_lower.push(point);
+				line_higher.push(point2);
+				line_budget.push(point3);
+
+				paper.text(x, xaxis_y + 10, months[i]);
+				paper.path(line(x, xaxis_y, x, xaxis_y + 4));
+			};
+			line_lower_copy = Array.prototype.slice.call(line_lower);
+			line_lower.push({x: width - margin_right, y: xaxis_y}, {x: margin_left, y: xaxis_y});
+			paper.path(shape(line_lower), true).attr("fill", "steelblue");
+			line_lower_copy.reverse();
+			paper.path(shape(line_higher.concat(line_lower_copy)), true).attr("fill", "green");
+			paper.path(shape(line_budget)).attr({stroke: "#FF0000", "stroke-width": "4"});
+			// paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom);
+			// var c2 = paper.path(line(margin_left,xaxis_y,width - 10,xaxis_y) + line(margin_left, margin_top, margin_left, xaxis_y));
+		};
+	</script>
+</head>
+<body>
+
+</body>
+</html>
