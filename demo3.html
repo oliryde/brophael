@@ -67,6 +67,7 @@
 				y = height - margin_bottom - i * (0.1 *(height - margin_top - margin_bottom));
 				if(yaxis_text[i] == 100) {
 					paper.text(25, y, "Index").rotate(270);
+					paper.text(width - 25, y, "Index").rotate(270);
 					red_path = paper.path(line(margin_left-5, y, width-margin_right+5, y)).attr({stroke: "#FF0000", "stroke-width": "2"});
 				} else {
 					paper.path(line(margin_left,y,margin_left-5,y));
