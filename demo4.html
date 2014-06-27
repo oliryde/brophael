@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bar chart</title>
+	<script src="raphael-min.js"></script>
+	<script>
+		function getMaxOfArray(numArray) {
+			var temp = [];
+			for (var i = numArray.length - 1; i >= 0; i--) {
+				temp.push(numArray[i].index + numArray[i].higher);
+			};
+			return Math.max.apply(null, temp);
+		}
+		function line(x1, y1, x2, y2){
+			return "M"+x1+" "+y1+"L"+x2+" "+y2+" ";
+		}
+
+		var size = {
+			width: window.innerWidth || document.body.clientWidth,
+			height: window.innerHeight || document.body.clientHeight
+		}
+
+		window.onload = function() {
+			var width = 1280;
+			var height = 720;
+			var height = size.height;
+			var width = size.width;
+			var margin_left = 60;
+			var margin_right = 60;
+			var margin_bottom = 60;
+			var margin_top = 10;
+			var months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"];
+
+			var xaxis_y = height-margin_bottom;
+			var yaxis_x = margin_left;
+			var data = [];
+
+			for(i = 0; i < 24; i++) {
+				data.push({index: Math.random()*200})
+			}
+			// console.log(data.length)
+			var xaxis_offset = width / 24;
+			var xaxis_length = width - margin_left - margin_right - xaxis_offset * 2;
+			var yaxis_length = height - margin_top - margin_bottom;
+			var bar_width = xaxis_length / 22 - (xaxis_length / 60);
+			var xaxis_spacing = xaxis_length / 22;
+			var max = (getMaxOfArray(data));
+			var tallest_bar = max;
+			var number = max;
+			var i = 0;
+			while(number > 100) {
+				number = number / 10;
+				i++;
+			};
+			if(((Math.floor(number)+1)*Math.pow(10, i)) - max < max*0.01) {
+				number += 1;
+			}
+			max = 200;
+			// console.log(i, "number", getMaxOfArray(data), "max");
+			// console.log(max*0.0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max);
+			yaxis_text = [0, max*0.1,max*0.2,max*0.3,max*0.4,max*0.5,max*0.6,max*0.7,max*0.8,max*0.9,max];
+
+			var paper = Raphael(0, 0, width, height);
+			paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom).attr("fill", "#FFFFFF");
+			for (var i = 0; i < 11; i++) {
+				y = height - margin_bottom - i * (0.1 *(height - margin_top - margin_bottom));
+				if(yaxis_text[i] == 100) {
+					paper.text(25, y, "Index").rotate(270);
+					paper.text(width - 25, y, "Index").rotate(270);
+					red_path = paper.path(line(margin_left-5, y, width-margin_right+5, y)).attr({stroke: "#FF0000", "stroke-width": "2"});
+				} else {
+					paper.path(line(margin_left,y,margin_left-5,y));
+					paper.path(line(width-margin_right,y,width-margin_right+5,y));
+					paper.path(line(margin_left,y,width- margin_right,y));
+				}
+
+				
+				paper.text(width-margin_right + 10, y, Math.round(yaxis_text[i])).attr('text-anchor', 'start');
+				paper.text(yaxis_x - 10, y, Math.round(yaxis_text[i])).attr('text-anchor', 'end');
+			}
+			for (var i = 0; i < 24; i++) {
+				bar1_height = yaxis_length * (data[i].index/max);
+				x = margin_left + xaxis_offset + (xaxis_spacing * i);
+				paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height).attr({
+					"fill": "0-#f0f071:0-#8b8b00:100",
+					"stroke-width": "0"});
+
+				paper.text(x, xaxis_y + 10, months[i]);
+				paper.text(x, xaxis_y + 22, Math.round(data[i].usage) + " kWh");
+				paper.text(x, xaxis_y + 34, "Index " + Math.round(data[i].index));
+
+				paper.path(line(x, xaxis_y, x, xaxis_y + 4));
+			};
+			paper.rect(margin_left, margin_top, width - margin_left - margin_right, height - margin_top - margin_bottom);
+
+			red_path.toFront();
+			// var c2 = paper.path(line(margin_left,xaxis_y,width - 10,xaxis_y) + line(margin_left, margin_top, margin_left, xaxis_y));
+		};
+	</script>
+</head>
+<body>
+
+</body>
+</html>
