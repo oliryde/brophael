@@ -40,11 +40,11 @@
 				data.push({index: Math.random()*200})
 			}
 			// console.log(data.length)
-			var xaxis_offset = width / 24;
+			var xaxis_offset = width / 48;
 			var xaxis_length = width - margin_left - margin_right - xaxis_offset * 2;
 			var yaxis_length = height - margin_top - margin_bottom;
-			var bar_width = xaxis_length / 22 - (xaxis_length / 60);
-			var xaxis_spacing = xaxis_length / 22;
+			var bar_width = xaxis_length / 23 - (xaxis_length / 60);
+			var xaxis_spacing = xaxis_length / 23;
 			var max = (getMaxOfArray(data));
 			var tallest_bar = max;
 			var number = max;
@@ -82,9 +82,13 @@
 			for (var i = 0; i < 24; i++) {
 				bar1_height = yaxis_length * (data[i].index/max);
 				x = margin_left + xaxis_offset + (xaxis_spacing * i);
-				paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height).attr({
-					"fill": "0-#f0f071:0-#8b8b00:100",
-					"stroke-width": "0"});
+				if(i <= 12) {
+					color =  {"fill": "0-#f0f071:0-#8b8b00:100", "stroke-width": "0"};
+				} else {
+					color = {"fill": "0-#5ab85a:0-#008b00:100", "stroke-width": "0"}
+				}
+				
+				paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height).attr(color);
 
 				paper.text(x, xaxis_y + 10, months[i]);
 				paper.text(x, xaxis_y + 22, Math.round(data[i].usage) + " kWh");
