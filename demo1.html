@@ -9,6 +9,7 @@
 			var temp = [];
 			for (var i = numArray.length - 1; i >= 0; i--) {
 				temp.push(numArray[i].lower + numArray[i].higher);
+				temp.push(numArray[i].budget);
 			};
 			return Math.max.apply(null, temp);
 		}
@@ -16,16 +17,16 @@
 			return "M"+x1+" "+y1+"L"+x2+" "+y2+" ";
 		}
 
-		// var size = {
-		// 	width: window.innerWidth || document.body.clientWidth,
-		// 	height: window.innerHeight || document.body.clientHeight
-		// }
+		var size = {
+			width: window.innerWidth || document.body.clientWidth,
+			height: window.innerHeight || document.body.clientHeight
+		}
 
 		window.onload = function() {
 			var width = 1280;
 			var height = 720;
-			// var height = size.height;
-			// var width = size.width;
+			var height = size.height;
+			var width = size.width;
 			var margin_left = 60;
 			var margin_right = 10;
 			var margin_bottom = 20;
@@ -37,7 +38,7 @@
 			var data = [];
 
 			for(i = 0; i < 12; i++) {
-				data.push({lower: Math.random()*height, higher: Math.random()*height})
+				data.push({lower: Math.random()*height, higher: Math.random()*height, budget: Math.random()*height})
 			}
 			// console.log(data.length)
 			var xaxis_offset = width / 24;
@@ -73,12 +74,17 @@
 			for (var i = 0; i < 12; i++) {
 				bar1_height = yaxis_length * (data[i].lower/max);
 				bar2_height = yaxis_length * (data[i].higher/max);
+				budget = yaxis_length * (data[i].budget/max);
 				x = margin_left + xaxis_offset + (xaxis_spacing * i);
+				bar_width2 = 1.1 * bar_width;
 				paper.rect(x-bar_width / 2, xaxis_y - bar1_height, bar_width, bar1_height).attr({
 					"fill": "0-#f0f071:0-#8b8b00:100",
 					"stroke-width": "0"});
 				paper.rect(x-bar_width / 2, xaxis_y - bar1_height - bar2_height, bar_width, bar2_height).attr({
 					"fill": "0-#5ab85a:0-#008b00:100",
+					"stroke-width": "0"});
+				paper.rect(x-bar_width2 / 2, xaxis_y - budget, bar_width2, height*0.01).attr({
+					"fill": "0-#ff0909:0-#ff0000:100",
 					"stroke-width": "0"});
 				// rekt.attr("fill", "0-#5ab85a:0-#008b00:100");
 				// rekt.attr("stroke-width", "0");
