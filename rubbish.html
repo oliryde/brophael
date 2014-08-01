@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Test</title>
+	<script src="raphael-min.js"></script>
+	<script src="raphael.graphBastard.js"></script>
+	
+</head>
+<body>
+	
+</body>
+<script>
+	var data = [];
+	for(i = 0; i < 12; i++) {
+		data.push({index: Math.random()*200-100})
+	}
+	paper = Raphael(0, 0, 1280, 720);
+	paper.graphBastard({data: data});
+</script>
+</html>
